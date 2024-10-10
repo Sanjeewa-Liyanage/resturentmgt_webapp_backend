@@ -4,6 +4,7 @@ import galleryItemRouter from "./routes/gallery.route.js";
 import userRouter from "./routes/usersRoutes.js";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import categoryRouter from "./routes/category.route.js";
 
 const app = express()
 app.use(bodyParser.json())
@@ -38,6 +39,7 @@ mongoose.connect(conString).then(
 
 app.use("/api/users",userRouter);
 app.use("/api/gallery",galleryItemRouter);
+app.use("/api/category",categoryRouter);
 
 app.listen(3000,(req,res)=>{
     console.log("Server is running on port 3000");
