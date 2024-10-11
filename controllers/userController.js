@@ -5,6 +5,8 @@
 import User from "../models/user.model.js"
 import jwt from "jsonwebtoken"; 
 import bcrypt from "bcrypt";
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 export function postUsers(req,res){
@@ -30,6 +32,7 @@ export function postUsers(req,res){
     )
 }
 export function loginUser(req,res) {
+    const key = process.env.KEY;
     const credential = req.body
     const hashedPassword = bcrypt.hashSync(credential.password,10)
     console.log(hashedPassword)
@@ -54,7 +57,7 @@ export function loginUser(req,res) {
                 type: user.type,
             }
         
-            const token =  jwt.sign(load,"secret",{expiresIn:"24h"});
+            const token =  jwt.sign(load,key,{expiresIn:"24h"});
             
             res.json({
                 message: "user found",
