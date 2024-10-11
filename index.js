@@ -16,13 +16,13 @@ const conString = process.env.MONGO_URL;
 
 
 
-// mongoose.connect(conString).then(
-//     () => console.log("Connected to MongoDB")
-// ).catch(
-//     (err) => {
-//         console.error("Error connecting to MongoDB:", err.message);
-//     }
-// );
+mongoose.connect(conString).then(
+    () => console.log("Connected to MongoDB")
+).catch(
+    (err) => {
+        console.error("Error connecting to MongoDB:", err.message);
+    }
+);
 const key = process.env.KEY;
 
 console.log(key);
