@@ -16,18 +16,19 @@ export function postCategory(req,res){
         return
     }
 
-    const category = req.body.item;
-    const newCategory = new Category(category);
+    const newCategory = new Category(req.body);
 
     newCategory.save().then(
-        ()=>{
+        (result)=>{
             res.status(201).json({
                 message: "Category created successfully",
+                result: result
             })
         }
-    ).catch(()=>{
+    ).catch((err)=>{
         res.status(500).json({
-            message: "Failed to create category"
+            message: "Failed to create category",
+            error: err
         })
     })
 }
@@ -39,9 +40,10 @@ export function getCategory(req,res){
                 categories: categories
             })
         }
-    ).catch(()=>{
+    ).catch((err)=>{
         res.status(500).json({
-            message: "Failed to get categories"
+            message: "Failed to get categories",
+            error: err
         })
     })
 }
