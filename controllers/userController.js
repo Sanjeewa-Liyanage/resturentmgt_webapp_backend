@@ -68,3 +68,13 @@ export function loginUser(req,res) {
         }
     })
 }
+export function isAdminValid(req){
+    const user = req.body.user
+    if(user == null){
+        return false
+    }
+    if(user.type!="admin"){
+        return false
+    }
+    return true
+}
