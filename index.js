@@ -5,17 +5,33 @@ import userRouter from "./routes/usersRoutes.js";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import categoryRouter from "./routes/category.route.js";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express()
 app.use(bodyParser.json())
 
 //connection string
-const conString ="mongodb+srv://tester2:4321@cluster0.zydxy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+const conString = process.env.MONGO_URL;
+
+
+
+mongoose.connect(conString).then(
+    () => console.log("Connected to MongoDB")
+).catch(
+    (err) => {
+        console.error("Error connecting to MongoDB:", err.message);
+    }
+);
+const key = process.env.KEY;
+
+console.log(key);
+
 
 app.use((req,res,next)=>{
     const token = req.header("Authorization")?.replace("Bearer ","")
     if(token!=null){
-        jwt.verify(token,"secret",(err,decoded)=>{
+        jwt.verify(token,key,(err,decoded)=>{
             if(decoded!=null){
                 req.body.user = decoded;
                 console.log(decoded)
