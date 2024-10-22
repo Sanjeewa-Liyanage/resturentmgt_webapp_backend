@@ -4,7 +4,8 @@ const categorySchema = mongoose.Schema(
     {
         name:{
             type:String,
-            required:true
+            required:true,
+            unique:true
         },
         
         description:{
@@ -14,7 +15,19 @@ const categorySchema = mongoose.Schema(
         price:{
             type:Number,
             required:true
-        }
+        },
+        features:[
+            {
+                type:String,
+
+            }
+        ],
+        image:{
+            type:String,
+            
+        },
+
+        
     }
 )
 const Category = mongoose.model('Category', categorySchema);
