@@ -78,3 +78,16 @@ export function isAdminValid(req){
     }
     return true
 }
+
+//is costomer
+export function isCustomerValid(req){
+    if(req.user == null){
+    return false
+  }
+  console.log(req.user)
+  if(req.user.type != "customer"){
+    return false
+  }
+
+  return true;
+}
