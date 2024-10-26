@@ -1,5 +1,5 @@
 import express from  'express';
-import { loginUser, postUsers } from '../controllers/userController.js';
+import { disableUser, enableUser, loginUser, postUsers } from '../controllers/userController.js';
 
 const userRouter = express.Router();
 
@@ -7,6 +7,9 @@ const userRouter = express.Router();
 
 userRouter.post("/",postUsers)
 userRouter.post("/login",loginUser)
+userRouter.put("/enable/:userId",enableUser)
+userRouter.put("/disable/:userId",disableUser)
+
 
 
 
