@@ -2,6 +2,11 @@ import mongoose from "mongoose"
 
 const userschema = mongoose.Schema(
     {
+        userId:{
+            type : Number,
+            required : true,
+            unique : true
+        },
         email :{
             type : String,
             required : true,
