@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import roomRouter from "./routes/rooms.route.js";
 import bookingRouter from "./routes/booking.route.js";
 import feedbackRouter from "./routes/feedback.route.js";
+import inqueryRouter from "./routes/inqueries.route.js";
 dotenv.config();
 
 const app = express()
@@ -62,6 +63,7 @@ app.use("/api/category",categoryRouter);
 app.use("/api/rooms",roomRouter);
 app.use("/api/bookings",bookingRouter);
 app.use("/api/feedbacks",feedbackRouter);
+app.use("/api/inqueries",inqueryRouter);
 app.listen(3000,(req,res)=>{
     console.log("Server is running on port 3000");
 })

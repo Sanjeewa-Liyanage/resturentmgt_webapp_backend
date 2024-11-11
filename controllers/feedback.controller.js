@@ -3,7 +3,7 @@ import { isAdminValid, isCustomerValid } from "./userController.js";
 
 //postFeddback
 export function postFeedback(req,res){
-    if(!isCustomerValid){
+    if(!isCustomerValid(req)){
         res.status(401).json({
             message:"Unauthorized"
         });
