@@ -55,6 +55,7 @@ export function loginUser(req,res) {
                     message: "password is incorrect"
                 })
             }else{
+                console.log("User fields:", user.firstname, user.lastname); // Debugging step
             const load={
                 id:user._id,
                 email:user.email,
@@ -134,7 +135,24 @@ export function enableUser(req,res){
         });
     });
 }
-
+export function getUser(req,res){
+    const user = req.user;
+    console.log(user)
+    if(user == null){
+        res.status(401).json({
+            message: "not found"
+        });
+        return;
+    }else{
+        console.log(user.firstname)
+        res.json({
+            
+            message: "user found",
+            user: user,
+            
+        });
+    }
+}
 //is admin
 export function isAdminValid(req){
     
@@ -149,6 +167,7 @@ export function isAdminValid(req){
 
 //is costomer
 export function isCustomerValid(req){
+
     if(req.user == null){
     return false
   }
@@ -159,3 +178,4 @@ export function isCustomerValid(req){
 
   return true;
 }
+
