@@ -10,9 +10,11 @@ import roomRouter from "./routes/rooms.route.js";
 import bookingRouter from "./routes/booking.route.js";
 import feedbackRouter from "./routes/feedback.route.js";
 import inqueryRouter from "./routes/inqueries.route.js";
+import cors from "cors";
 dotenv.config();
 
 const app = express()
+app.use(cors())
 app.use(bodyParser.json())
 
 //connection string
@@ -33,19 +35,20 @@ console.log(key);
 
 
 app.use((req,res,next)=>{
-    const token = req.header("Authorization")?.replace("Bearer ","")
-    if(token!=null){
-        jwt.verify(token,key,(err,decoded)=>{
-            if(decoded!=null){
-                req.user = decoded;
-                console.log(decoded)
-                next()
-            }else{
-                next()
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+    if (token) {
+        jwt.verify(token, key, (err, decoded) => {
+            if (err) {
+                console.error("Token verification failed:", err.message);
+                return next(); // Continue without user attached if the token is invalid
             }
-        })
-    }else{
-        next()
+            req.user = decoded; // Attach decoded user to req.user
+            console.log("Decoded user:", decoded);
+            next();
+        });
+    } else {
+        console.log("No token provided");
+        next(); // Continue without user attached
     }
 });
 

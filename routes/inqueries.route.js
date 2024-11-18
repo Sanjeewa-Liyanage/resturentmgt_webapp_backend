@@ -1,5 +1,5 @@
 import express from 'express';
-import { examineInquery, getInqueries, postInquery } from '../controllers/inquery.controller';
+import { examineInquery, getInqueries, postInquery } from '../controllers/inquery.controller.js';
 
 const inqueryRouter = express.Router();
 
