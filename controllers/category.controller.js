@@ -2,7 +2,7 @@ import Category from "../models/category.model.js";
 import {isAdminValid} from "./userController.js";
 
 export function postCategory(req,res){
-    const user = req.body.user
+    const user = req.user
     if(user == null){
         res.status(401).json({
             message: "You must be logged in to create a Category"
@@ -51,7 +51,7 @@ export function getCategory(req,res){
 
 //delete category
 export function deleteCategory(req,res){
-    const user = req.body.user
+    const user = req.user
     if(user == null){
         res.status(401).json({
             message: "You must be logged in to delete a Category"

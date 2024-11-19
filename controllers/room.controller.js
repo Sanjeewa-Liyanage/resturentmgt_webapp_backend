@@ -128,3 +128,47 @@ export function getRoomByCategory(req,res){
     })
 }
 
+//change availability
+export function changeAvailability(req, res) {
+    if (!isAdminValid(req)) {
+        res.status(401).json({
+            message: "You must be an admin to change availability"
+        });
+        return;
+    }
+
+    const roomId = req.params.roomId;
+
+    // Find the room first to get the current value of "available"
+    Room.findOne({ roomId: roomId })
+        .then((room) => {
+            if (!room) {
+                res.status(404).json({
+                    message: "Room not found"
+                });
+                return;
+            }
+
+            // Toggle the "available" field
+            const newAvailability = !room.available;
+
+            // Update the room's availability
+            return Room.findOneAndUpdate(
+                { roomId: roomId },
+                { $set: { available: newAvailability } },
+                { new: true } // Return the updated document
+            );
+        })
+        .then((updatedRoom) => {
+            res.status(200).json({
+                message: "Availability changed successfully",
+                newAvailability: updatedRoom.available
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: "Failed to change availability",
+                error: err
+            });
+        });
+}
