@@ -55,13 +55,14 @@ export function loginUser(req,res) {
                     message: "password is incorrect"
                 })
             }else{
-                console.log("User fields:", user.firstname, user.lastname); // Debugging step
+                console.log("User fields:", user.firstname, user.lastname); 
             const load={
                 id:user._id,
                 email:user.email,
                 firstname: user.firstname,
                 lastname: user.lastname,
                 type: user.type,
+                image: user.image
             }
         
             const token =  jwt.sign(load,key,{expiresIn:"24h"});
@@ -149,6 +150,7 @@ export function getUser(req,res){
             
             message: "user found",
             user: user,
+
             
         });
     }
