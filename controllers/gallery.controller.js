@@ -1,6 +1,7 @@
 //create gallery items
 import { isAdminValid } from "./userController.js"
 import GalleryItem from "../models/gallery.model.js"
+import Category from "../models/category.model.js";
 
 export function postGaleryreq(req, res) {
     try {
@@ -75,3 +76,34 @@ export function deleteGalleryItem(req, res) {
             res.status(500).json({ message: "Error deleting gallery item" });
         });
 }
+
+export function updateGalleryItem(req, res) {
+    const user = req.user;
+
+    if (!isAdminValid(req)) {
+        return res.status(401).json({ message: "You must be an admin to update a gallery item" });
+    }
+
+    const name = req.params.name;
+
+    // Update the gallery item
+    GalleryItem.findOneAndUpdate(
+        { name: name },
+        { $set: req.body },
+        { new: true }
+    )
+        .then((updatedItem) => {
+            if (!updatedItem) {
+                return res.status(404).json({ message: "Gallery item not found" });
+            }
+            res.status(200).json({
+                message: "Gallery item updated successfully",
+                updatedItem,
+            });
+        })
+        .catch((err) => {
+            console.error("Error updating gallery item:", err);
+            res.status(500).json({ message: "Error updating gallery item", error: err });
+        });
+}
+
