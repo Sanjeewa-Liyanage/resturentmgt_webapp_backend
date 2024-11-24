@@ -46,7 +46,12 @@ const userschema = mongoose.Schema(
             type:Boolean,
             default : false,
             required: true,
+        },
+        image:{
+            type:String,
+            default : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F634796509929203226%2F&psig=AOvVaw3g4Q5Z6ZoX0jx4N0lF9Zy-&ust=1633536469344000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCJjXl5P5z_MCFQAAAAAdAAAA"
         }
+
 
     }
 )
