@@ -1,7 +1,7 @@
 //create gallery items
 import { isAdminValid } from "./userController.js"
 import GalleryItem from "../models/gallery.model.js"
-import Category from "../models/category.model.js";
+
 
 export function postGaleryreq(req, res) {
     try {
