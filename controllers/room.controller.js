@@ -90,13 +90,17 @@ export function getallRoom(req,res){
 
 //update room
 export function updateRoom(req,res){
+    const user = req.user;
+
     if(!isAdminValid(req)){
         res.status(401).json({
             message: "You must be an admin to update a room"
         })
-        return
+        
     }
     const roomId = req.params.roomId;
+
+    
     Room.findOneAndUpdate({roomId:roomId},req.body).then(
         ()=>{
             res.status(200).json({

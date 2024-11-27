@@ -22,10 +22,13 @@ const categorySchema = mongoose.Schema(
 
             }
         ],
-        image:{
-            type:String,
+        image:[
+            {
+                type:String,
+                
+            },
             
-        },
+        ],
 
         
     }
