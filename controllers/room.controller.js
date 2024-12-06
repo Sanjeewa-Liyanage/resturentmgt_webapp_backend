@@ -118,7 +118,7 @@ export function updateRoom(req,res){
 //get room by category
 export function getRoomByCategory(req,res){
     const category = req.params.category;
-    Room.find({Category:category}).then(
+    Room.find({category:category}).then(
         (result)=>{
             res.status(200).json({
                 rooms: result
@@ -173,6 +173,51 @@ export function changeAvailability(req, res) {
             res.status(500).json({
                 message: "Failed to change availability",
                 error: err
+            });
+        });
+}
+export function filterRooms(req, res) {
+    const { category, available } = req.query;
+
+    
+    const filter = {};
+    if (category) filter.category = category;
+    if (available !== undefined) filter.available = available === "true"; 
+
+    Room.find(filter)
+        .then((rooms) => {
+            res.status(200).json({
+                message: "Rooms filtered successfully",
+                rooms
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: "Failed to filter rooms",
+                error: err
+            });
+        });
+}
+
+export function getRooms(req, res) {
+    const { category } = req.query; // Extract category from query parameters
+
+    const filter = { available: true }; // Base filter: available rooms
+    if (category) {
+        filter.category = category; // Add category to the filter if provided
+    }
+
+    Room.find(filter)
+        .then((result) => {
+            res.status(200).json({
+                message: "Rooms retrieved successfully",
+                rooms: result,
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: "Failed to get rooms",
+                error: err,
             });
         });
 }
