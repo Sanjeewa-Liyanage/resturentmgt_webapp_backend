@@ -94,3 +94,34 @@ export function approveFeedback(req, res) {
             });
         });
 }
+
+//get feedbacks by roomid
+export default function getFeedbacksByRoomId(req, res) {
+    const roomId = req.params.roomId;
+
+    if (!roomId) {
+        res.status(400).json({
+            message: "RoomId is required",
+        });
+        return;
+    }
+
+    console.log("Fetching feedbacks for roomId:", roomId);
+
+    Feedback.find({ roomId: roomId, approved: true })
+        .populate("user", "firstname email")
+        .then((feedbacks) => {
+            console.log("Feedbacks fetched:", feedbacks);
+            res.status(200).json({
+                message: "Feedback fetched Success",
+                feedbacks: feedbacks,
+            });
+        })
+        .catch((err) => {
+            console.error("Error fetching feedbacks:", err);
+            res.status(500).json({
+                message: "Failed to fetch feedbacks",
+                error: err,
+            });
+        });
+}
