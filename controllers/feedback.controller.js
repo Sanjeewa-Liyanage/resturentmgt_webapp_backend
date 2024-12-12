@@ -111,8 +111,7 @@ export function approveFeedback(req, res) {
             });
         });
 }
-<<<<<<< Updated upstream
-=======
+
 
 //get feedbacks by roomid
 export default function getFeedbacksByRoomId(req, res) {
@@ -172,4 +171,4 @@ export function deleteFeedback(req,res){
         });
     });
 }
->>>>>>> Stashed changes
+

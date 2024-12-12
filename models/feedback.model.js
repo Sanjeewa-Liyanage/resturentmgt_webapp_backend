@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import User from "./user.model.js";
 const feedbackSchema = mongoose.Schema({
     feedbackId:{
         type:Number,
@@ -9,13 +9,12 @@ const feedbackSchema = mongoose.Schema({
 
     user:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'User',
+        ref:User,
         required:true
     },
     roomId:{
         type:Number,
-        ref:'Room',
-        required:false,
+        required:true
     },
 
     content:{
