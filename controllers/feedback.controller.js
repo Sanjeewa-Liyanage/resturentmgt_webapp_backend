@@ -61,6 +61,23 @@ export function getFeedbacks(req,res){
     });
 
 }
+//get pending feedbacks 
+export function getPendingFeedbacks(req,res){
+    const query = {approved:false};
+
+    Feedback.find(query).then(result =>{
+        res.status(200).json({
+            message:"Feedbacks fetched",
+            feedbacks:result
+        });
+    }).catch(err =>{
+        res.status(500).json({
+            message:"Feedbacks not fetched",
+            error:err
+        });
+    });
+
+}
 
 //approve feedbacks
 
@@ -125,3 +142,32 @@ export default function getFeedbacksByRoomId(req, res) {
             });
         });
 }
+//delete feedback
+export function deleteFeedback(req,res){
+    if(!isAdminValid(req)){
+        res.status(401).json({
+            message:"Unauthorized"
+        });
+        return;
+    }
+    const feedbackId = req.params.feedbackId;
+
+    Feedback.findOneAndDelete({feedbackId:feedbackId}).then(result =>{
+        if(result){
+            res.status(200).json({
+                message:"Feedback deleted",
+                feedback:result
+            });
+        }else{
+            res.status(404).json({
+                message:"Feedback not found"
+            });
+        }
+    }).catch(err =>{
+        res.status(500).json({
+            message:"Failed to delete feedback",
+            error:err
+        });
+    });
+}
+
