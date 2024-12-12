@@ -1,4 +1,4 @@
-import express from "express";
+
 import getFeedbacksByRoomId, { 
     postFeedback, 
     getFeedbacks, 
@@ -7,6 +7,16 @@ import getFeedbacksByRoomId, {
     deleteFeedback
     
 } from "../controllers/feedback.controller.js";
+
+import getFeedbacksByRoomId, { 
+    postFeedback, 
+    getFeedbacks, 
+    approveFeedback,
+    getPendingFeedbacks,
+    deleteFeedback 
+    
+} from "../controllers/feedback.controller.js";
+
 
 const feedbackRouter = express.Router();
 
@@ -25,4 +35,21 @@ feedbackRouter.put("/approve/:feedbackId", approveFeedback);
 // Route to get feedbacks for a specific room by roomId
 feedbackRouter.get("/room/:roomId", getFeedbacksByRoomId);
 
+
 export default feedbackRouter;
+
+export default feedbackRouter;
+
+feedbackRouter.get("/pending", getPendingFeedbacks);
+
+// Route to approve a feedback (admin only)
+feedbackRouter.put("/approve/:feedbackId", approveFeedback);
+
+// Route to get feedbacks for a specific room by roomId
+feedbackRouter.get("/room/:roomId", getFeedbacksByRoomId);
+
+// delete feedback
+feedbackRouter.delete("/:feedbackId", deleteFeedback);
+
+export default feedbackRouter;
+
