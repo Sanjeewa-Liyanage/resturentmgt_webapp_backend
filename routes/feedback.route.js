@@ -3,6 +3,8 @@ import getFeedbacksByRoomId, {
     postFeedback, 
     getFeedbacks, 
     approveFeedback, 
+    getPendingFeedbacks,
+    deleteFeedback
     
 } from "../controllers/feedback.controller.js";
 
@@ -13,9 +15,12 @@ feedbackRouter.post("/", postFeedback);
 
 // Route to get all approved feedbacks
 feedbackRouter.get("/approved", getFeedbacks);
+feedbackRouter.get("/pending", getPendingFeedbacks);
+feedbackRouter.delete("/:feedbackId", deleteFeedback);
 
 // Route to approve a feedback (admin only)
 feedbackRouter.put("/approve/:feedbackId", approveFeedback);
+
 
 // Route to get feedbacks for a specific room by roomId
 feedbackRouter.get("/room/:roomId", getFeedbacksByRoomId);
