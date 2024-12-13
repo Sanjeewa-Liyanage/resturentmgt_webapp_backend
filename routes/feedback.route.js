@@ -8,14 +8,7 @@ import getFeedbacksByRoomId, {
     
 } from "../controllers/feedback.controller.js";
 
-import getFeedbacksByRoomId, { 
-    postFeedback, 
-    getFeedbacks, 
-    approveFeedback,
-    getPendingFeedbacks,
-    deleteFeedback 
-    
-} from "../controllers/feedback.controller.js";
+import express from "express";
 
 
 const feedbackRouter = express.Router();
@@ -36,9 +29,9 @@ feedbackRouter.put("/approve/:feedbackId", approveFeedback);
 feedbackRouter.get("/room/:roomId", getFeedbacksByRoomId);
 
 
-export default feedbackRouter;
 
-export default feedbackRouter;
+
+
 
 feedbackRouter.get("/pending", getPendingFeedbacks);
 
