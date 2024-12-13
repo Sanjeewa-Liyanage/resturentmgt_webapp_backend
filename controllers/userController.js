@@ -155,6 +155,71 @@ export function getUser(req,res){
         });
     }
 }
+
+//get all users 
+export function getAllUsers(req,res){
+    if(!isAdminValid(req)){
+        res.status(401).json({
+            message: "You must be an admin to view all users"
+        })
+        return
+    }
+    User.find().then(
+        (result)=>{
+            res.status(200).json({
+                users: result
+            })
+        }
+    ).catch((err)=>{
+        res.status(500).json({
+            message: "Failed to get users",
+            error: err
+        })
+    })
+}
+export function getBannedUsers (req,res){
+    const type = "customer"
+    if(!isAdminValid(req)){
+        res.status(401).json({
+            message: "You must be an admin to view all users"
+        })
+        return
+    }
+    User.find({disabled:true}).then(
+        (result)=>{
+            res.status(200).json({
+                users: result
+            })
+        }
+    ).catch((err)=>{
+        res.status(500).json({
+            message: "Failed to get users",
+            error: err
+        })
+    })
+}
+
+// get active users
+export function getActiveUsers(req,res){
+    if(!isAdminValid(req)){
+        res.status(401).json({
+            message: "You must be an admin to view all users"
+        })
+        return
+    }
+    User.find({disabled:false,type:"customer"}).then(
+        (result)=>{
+            res.status(200).json({
+                users: result
+            })
+        }
+    ).catch((err)=>{
+        res.status(500).json({
+            message: "Failed to get users",
+            error: err
+        })
+    })
+}
 //is admin
 export function isAdminValid(req){
     
