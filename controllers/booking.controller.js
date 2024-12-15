@@ -1,5 +1,5 @@
 import Booking from "../models/booking.model.js";
-import { isCustomerValid } from "./userController.js";
+import { isAdminValid, isCustomerValid } from "./userController.js";
 
 export function postBooking(req, res) {
     if (!isCustomerValid(req)) {
@@ -46,4 +46,46 @@ export function postBooking(req, res) {
                 error: err.message || "Unknown error occurred"
             });
         });
+}
+export function getBookings(req, res) {
+    if(isAdminValid(req)){
+        Booking.find().then((bookings) => {
+            res.status(200).json({
+                message: "Bookings retrieved successfully",
+                bookings: bookings
+            });
+        }).catch((err) => {
+            console.error("Error occurred while fetching bookings:", err);
+            res.status(500).json({
+                message: "Bookings retrieval failed",
+                error: err.message || "Unknown error occurred"
+            });
+        });
+    }
+}
+export function retrieveBookingsByDate(req,res){
+    const start = req.body.start;
+    const end = req.body.end;
+    console.log(start,end);
+
+    Booking.find({
+        start:{
+            $gte: new Date(start),
+        },
+        end:{
+            $lte: new Date(end)
+        }
+        
+    }).then((bookings)=>{
+        res.status(200).json({
+            message:"Bookings retrieved successfully",
+            bookings:bookings
+        });
+    }).catch((err)=>{
+        console.error("Error occurred while fetching bookings:",err);
+        res.status(500).json({
+            message:"Bookings retrieval failed",
+            error:err.message || "Unknown error occurred"
+        });
+    });
 }
