@@ -1,7 +1,7 @@
 import Booking from "../models/booking.model.js";
 import { isAdminValid, isCustomerValid } from "./userController.js";
 import Room from "../models/room.model.js";
-
+import moment from "moment";
 export function postBooking(req, res) {
     if (!isCustomerValid(req)) {
         res.status(403).json({
@@ -20,6 +20,7 @@ export function postBooking(req, res) {
             const newBooking = new Booking({
                 bookingId: newId,
                 roomId: req.body.roomId,
+                category: req.body.category,
                 email: req.user.email, 
                 start: req.body.start,
                 end: req.body.end
@@ -154,6 +155,7 @@ export async function createBookingUsingCategory(req, res) {
 			status: "pending", // Default status
 			start: startDate,
 			end: endDate,
+            category: category,
 		});
 
 		const savedBooking = await newBooking.save();
@@ -169,4 +171,117 @@ export async function createBookingUsingCategory(req, res) {
 			error: error.message,
 		});
 	}
+}
+
+export function getPendingBookings(req,res){
+    if(isAdminValid(req)){
+    
+        Booking.find({status:"pending"}).then((bookings)=>{
+            res.status(200).json({
+                message:"Pending bookings retrieved successfully",
+                bookings:bookings
+            });
+        }).catch((err)=>{
+            console.error("Error occurred while fetching pending bookings:",err);
+            res.status(500).json({
+                message:"Pending bookings retrieval failed",
+                error:err.message || "Unknown error occurred"
+            });
+        });
+    }
+}
+export function approveBooking(req,res){
+    if(!isAdminValid(req)){
+        res.status(403).json({
+            message:"Forbidden"
+        });
+        return;
+    }
+    const bookingId = req.params.bookingId;
+    Booking.findOneAndUpdate({bookingId:bookingId},{status:"approved"},{new:true}).then((updatedBooking)=>{
+        if(!updatedBooking){
+            return res.status(404).json({
+                message:"Booking not found"
+            });
+        }
+        res.status(200).json({
+            message:"Booking approved",
+            booking:updatedBooking
+        });
+    }).catch((err)=>{
+        res.status(500).json({
+            message:"Booking not approved",
+            error:err
+        });
+    });
+}
+
+export function getApprovedBookings(req,res){
+    if(isAdminValid(req)){
+        Booking.find({status:"approved"}).then((bookings)=>{
+            res.status(200).json({
+                message:"Approved bookings retrieved successfully",
+                bookings:bookings
+            });
+        }).catch((err)=>{
+            console.error("Error occurred while fetching approved bookings:",err);
+            res.status(500).json({
+                message:"Approved bookings retrieval failed",
+                error:err.message || "Unknown error occurred"
+            });
+        });
+    }
+}
+export function getPendingBookingsCount(req, res) {
+    if (isAdminValid(req)) {
+        Booking.countDocuments({ status: "pending" })
+            .then((count) => {
+                res.status(200).json({
+                    message: "Pending bookings count retrieved successfully",
+                    count: count
+                });
+            })
+            .catch((err) => {
+                console.error("Error occurred while counting pending bookings:", err);
+                res.status(500).json({
+                    message: "Pending bookings count retrieval failed",
+                    error: err.message || "Unknown error occurred"
+                });
+            });
+    }
+}
+
+
+export function removeEndedBookings(req, res) {
+    try {
+        // Get the start of yesterday and the end of yesterday (to compare without the time part)
+        const yesterdayStart = moment().subtract(1, "days").startOf("day").toDate();
+        const yesterdayEnd = moment().subtract(1, "days").endOf("day").toDate();
+        
+        // Find and delete bookings that ended yesterday
+        Booking.deleteMany({ end: { $gte: yesterdayStart, $lte: yesterdayEnd } })
+            .then((result) => {
+                if (result.deletedCount === 0) {
+                    return res.status(404).json({
+                        message: "No bookings found to delete",
+                    });
+                }
+                res.status(200).json({
+                    message: `${result.deletedCount} bookings removed successfully.`,
+                });
+            })
+            .catch((err) => {
+                console.error("Error occurred while deleting ended bookings:", err);
+                res.status(500).json({
+                    message: "Failed to remove ended bookings",
+                    error: err.message || "Unknown error occurred",
+                });
+            });
+    } catch (error) {
+        console.error("Error removing ended bookings:", error);
+        res.status(500).json({
+            message: "Error removing ended bookings",
+            error: error.message || "Unknown error occurred",
+        });
+    }
 }

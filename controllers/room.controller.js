@@ -221,3 +221,25 @@ export function getRooms(req, res) {
             });
         });
 }
+//bookroom
+export function bookRoom(req,res){
+if(isAdminValid(req)){
+   const roomId = req.params.roomId;
+    Room.findOneAndUpdate({roomId:roomId},{available:false}).then((updatedRoom)=>{
+        if(!updatedRoom){
+            return res.status(404).json({
+                message:"Room not found"
+            });
+        }
+        res.status(200).json({
+            message:"Room booked",
+            room:updatedRoom
+        });
+    }).catch((err)=>{
+        res.status(500).json({
+            message:"Room not booked",
+            error:err
+        });
+    }); 
+}
+}
