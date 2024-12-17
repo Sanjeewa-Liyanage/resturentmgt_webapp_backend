@@ -8,7 +8,8 @@ import {
     updateRoom, 
     changeAvailability, 
     filterRooms, 
-    getRooms 
+    getRooms, 
+    bookRoom
 } from '../controllers/room.controller.js';
 
 const roomRouter = express.Router();
@@ -20,6 +21,7 @@ roomRouter.get("/availableRooms", getRooms); // Get available rooms filtered by 
 roomRouter.get("/filter", filterRooms); // Filter rooms
 roomRouter.get("/category/:category", getRoomByCategory); // Get rooms by category
 roomRouter.put("/:roomId", updateRoom); // Update a room
+roomRouter.put("/book/:roomId",bookRoom); // Book a room
 roomRouter.put("/:roomId/available", changeAvailability); // Change room availability
 roomRouter.get("/:roomId", getRoomById); // Get a room by ID
 

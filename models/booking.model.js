@@ -10,11 +10,15 @@ const bookingSchema = mongoose.Schema({
         type:Number,
         required:true
     },
+    category:{
+        type:String,
+        required:true
+    },
     email:{
         type:String,
         required:true
     },
-    staus:{
+    status:{
         type:String,
         required:true,
         default:"pending"
