@@ -2,6 +2,8 @@ import Booking from "../models/booking.model.js";
 import { isAdminValid, isCustomerValid } from "./userController.js";
 import Room from "../models/room.model.js";
 import moment from "moment";
+import { searchBookingsService,countDeluxeBookingsService,countBookingsByCategory } from "../services/booking.service.js";
+import e from "express";
 export function postBooking(req, res) {
     if (!isCustomerValid(req)) {
         res.status(403).json({
@@ -254,11 +256,11 @@ export function getPendingBookingsCount(req, res) {
 
 export function removeEndedBookings(req, res) {
     try {
-        // Get the start of yesterday and the end of yesterday (to compare without the time part)
+        
         const yesterdayStart = moment().subtract(1, "days").startOf("day").toDate();
         const yesterdayEnd = moment().subtract(1, "days").endOf("day").toDate();
         
-        // Find and delete bookings that ended yesterday
+        
         Booking.deleteMany({ end: { $gte: yesterdayStart, $lte: yesterdayEnd } })
             .then((result) => {
                 if (result.deletedCount === 0) {
@@ -272,6 +274,7 @@ export function removeEndedBookings(req, res) {
             })
             .catch((err) => {
                 console.error("Error occurred while deleting ended bookings:", err);
+                console.log(err);
                 res.status(500).json({
                     message: "Failed to remove ended bookings",
                     error: err.message || "Unknown error occurred",
@@ -285,3 +288,74 @@ export function removeEndedBookings(req, res) {
         });
     }
 }
+export const searchBookings = async (req, res) => {
+    try {
+      const { query } = req.query; // Single query string
+      const searchRegex = new RegExp(query, "i"); // Case-insensitive regex
+  
+      // Define search conditions
+      const searchConditions = {
+        $or: [],
+      };
+  
+      // Apply regex for string fields: category, email
+      if (query) {
+        // Apply regex for category, email
+        searchConditions.$or.push(
+        {status: { $regex: searchRegex } },
+        { category: { $regex: searchRegex } },
+        { email: { $regex: searchRegex } }
+        );
+  
+        // Apply exact match for numeric fields: roomId, bookingId
+        if (!isNaN(query)) {
+          searchConditions.$or.push(
+            { roomId: query }, // Exact match for roomId (assuming it's a number)
+            { bookingId: query } // Exact match for bookingId (assuming it's a number)
+          );
+        }
+
+        
+
+      }
+  
+      // Fetch bookings matching the search conditions
+      const bookings = await Booking.find(searchConditions);
+      res.status(200).json({ bookings });
+    } catch (err) {
+      console.error("Error searching bookings:", err);
+      res.status(500).json({
+        message: "Error searching bookings.",
+        error: err.message || "Unknown error occurred",
+      });
+    }
+  };
+
+
+  export const countDeluxeBookingsControllar = async (req,res) => {
+    try{
+        const count = await countDeluxeBookingsService();
+        return res.status(200).json({
+            message:"Deluxe bookings count retrieved successfully",
+            count:count
+        });
+    }catch(err){
+        console.error("Error occurred while counting deluxe bookings:",err);
+        return res.status(500).json({
+            message:"Deluxe bookings count retrieval failed",
+            error:err.message || "Unknown error occurred"
+        });
+    }
+};
+// controllers/bookingController.js
+
+
+export const countBookingsByCategoryController = async (req, res) => {
+  try {
+    const counts = await countBookingsByCategory();
+    return res.status(200).json({ success: true, data: counts });
+  } catch (error) {
+    console.error("Error in countBookingsByCategoryController:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
